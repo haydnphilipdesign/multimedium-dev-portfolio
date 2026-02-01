@@ -18,9 +18,11 @@ const ContactSection = ({ className = '' }: ContactSectionProps) => {
     email: '',
     budget: '',
     message: '',
+    company: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -85,24 +87,35 @@ const ContactSection = ({ className = '' }: ContactSectionProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     setIsSubmitting(true);
 
-    const subject = encodeURIComponent(`Project inquiry — ${formData.name || 'New lead'}`);
-    const body = encodeURIComponent(
-      [
-        `Name: ${formData.name}`,
-        `Email: ${formData.email}`,
-        `Budget: ${formData.budget || '(not specified)'}`,
-        '',
-        formData.message,
-      ].join('\n')
-    );
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          budget: formData.budget,
+          message: formData.message,
+          pageUrl: window.location.href,
+          company: formData.company,
+        }),
+      });
 
-    window.location.href = `mailto:haydn@multimedium.dev?subject=${subject}&body=${body}`;
+      const payload = (await response.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+      if (!response.ok || !payload?.ok) {
+        throw new Error(payload?.error || 'Failed to send message');
+      }
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    setFormData({ name: '', email: '', budget: '', message: '' });
+      setIsSubmitted(true);
+      setFormData({ name: '', email: '', budget: '', message: '', company: '' });
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : 'Failed to send message');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -160,14 +173,26 @@ const ContactSection = ({ className = '' }: ContactSectionProps) => {
               Message Sent!
             </h3>
             <p className="text-cream/60">
-              If your email client didn&apos;t open, email us directly at{' '}
-              <a href="mailto:haydn@multimedium.dev" className="text-gold hover:text-cream transition-colors">
-                haydn@multimedium.dev
-              </a>.
+              We&apos;ll get back to you within two business days.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot (bots fill this) */}
+            <div className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden" aria-hidden="true">
+              <label>
+                Company
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.company}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+
             <div>
               <label className="block font-mono text-xs tracking-[0.12em] text-cream/50 uppercase mb-2">
                 Name
@@ -230,6 +255,21 @@ const ContactSection = ({ className = '' }: ContactSectionProps) => {
                 placeholder="Tell us about your project..."
               />
             </div>
+
+            {submitError && (
+              <div className="bg-charcoal-light rounded-xl card-border p-4">
+                <p className="text-sm text-cream/70">
+                  Couldn&apos;t send your message. Please email{' '}
+                  <a href="mailto:haydn@multimedium.dev" className="text-gold hover:text-cream transition-colors">
+                    haydn@multimedium.dev
+                  </a>{' '}
+                  and we&apos;ll reply within two business days.
+                </p>
+                <p className="mt-2 font-mono text-xs text-cream/40">
+                  Error: {submitError}
+                </p>
+              </div>
+            )}
 
             <button
               type="submit"
