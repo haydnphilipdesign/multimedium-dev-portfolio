@@ -16,9 +16,9 @@ const AboutSection = ({ className = '' }: AboutSectionProps) => {
   const statsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   const stats = [
-    { value: '8+', label: 'YEARS' },
-    { value: '40+', label: 'PROJECTS' },
-    { value: '95%', label: 'RETENTION' },
+    { value: 'SOLO-LED', label: 'FOUNDER' },
+    { value: 'ONE LOOP', label: 'STRATEGY→BUILD' },
+    { value: 'FAST + A11Y', label: 'DEFAULT' },
   ];
 
   useLayoutEffect(() => {
@@ -94,8 +94,8 @@ const AboutSection = ({ className = '' }: AboutSectionProps) => {
         className="relative mx-[5vw] mt-24 h-[44vh] rounded-card overflow-hidden card-shadow card-border sm:h-[52vh] md:absolute md:left-[5vw] md:top-[12vh] md:mx-0 md:mt-0 md:w-[46vw] md:h-[76vh]"
       >
         <img
-          src="/images/about_scene.jpg"
-          alt="About the studio"
+          src="/images/haydn.png"
+          alt="Haydn, founder of Multimedium"
           className="w-full h-full object-cover"
         />
       </div>
@@ -116,13 +116,12 @@ const AboutSection = ({ className = '' }: AboutSectionProps) => {
           className="bg-charcoal-light rounded-xl card-border p-6 mb-4"
         >
           <p className="text-base text-cream/80 leading-relaxed">
-            Multimedium is a solo-led studio with a network of senior collaborators. 
-            We ship fast, design with restraint, and care deeply about accessibility 
-            and performance.
+            Multimedium is led by Haydn—a solo web design and development studio.
+            When a project needs it, I bring in senior collaborators for specialized work.
           </p>
           <p className="text-base text-cream/60 leading-relaxed mt-4">
-            Every project starts with understanding your business goals. We don&apos;t 
-            just make things beautiful—we make them work.
+            Every project starts with business goals and a clear plan. The output isn&apos;t
+            just beautiful—it&apos;s built to be understandable, fast, and credible.
           </p>
         </div>
 

@@ -174,8 +174,8 @@ const HeroSection = ({ className = '' }: HeroSectionProps) => {
         className="relative mx-[5vw] mt-24 h-[52vh] rounded-card overflow-hidden card-shadow card-border sm:h-[60vh] md:absolute md:left-[5vw] md:top-[14vh] md:mx-0 md:mt-0 md:w-[44vw] md:h-[72vh]"
       >
         <img
-          src="/images/hero_portrait.jpg"
-          alt="Creative professional"
+          src="/images/haydn.png"
+          alt="Haydn"
           className="w-full h-full object-cover"
         />
       </div>
@@ -200,7 +200,7 @@ const HeroSection = ({ className = '' }: HeroSectionProps) => {
           ref={subheadlineRef}
           className="mt-[3vh] text-base md:text-lg text-cream/70 max-w-md leading-relaxed"
         >
-          Multimedium is a small studio designing bold, scroll-driven sites for brands with something to say.
+          Multimedium is Haydn&apos;s solo-led studio designing bold, scroll-driven sites for brands with something to say.
         </p>
 
         {/* CTA */}
